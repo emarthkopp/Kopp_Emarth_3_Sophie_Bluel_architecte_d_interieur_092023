@@ -39,8 +39,6 @@ fetch("http://localhost:5678/api/works")
     <figcaption>${objectsFiltres[project].title}</figcaption>
   </figure>`
   }
-    
-    console.log(objectsFiltres)
    })
    const buttonFlats = document.getElementById("flats");
   buttonFlats.addEventListener("click", function(){
@@ -56,7 +54,6 @@ fetch("http://localhost:5678/api/works")
     <figcaption>${flatsFiltres[project].title}</figcaption>
   </figure>`
   }
-    console.log(flatsFiltres)
    })
   
    const buttonHotels = document.getElementById("hotels");
@@ -73,7 +70,6 @@ fetch("http://localhost:5678/api/works")
     <figcaption>${hotelsFiltres[project].title}</figcaption>
   </figure>`
   }
-    console.log(hotelsFiltres)
    })
    const buttonAll = document.getElementById("all");
   buttonAll.addEventListener("click", function(){
@@ -89,9 +85,10 @@ fetch("http://localhost:5678/api/works")
     <figcaption>${allFiltres[project].title}</figcaption>
   </figure>`
   }
-    console.log(allFiltres)
    });
-   ;
+   
+   
+  
    
    
 

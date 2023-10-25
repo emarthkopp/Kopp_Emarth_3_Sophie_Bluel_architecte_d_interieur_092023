@@ -12,7 +12,7 @@
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
 	<script src="scripts/config.js" defer></script>
-	<script src="scripts/script.js" defer></script>
+	<script src="scripts/login.js" defer></script>
 </head>
 
 <body>
@@ -20,7 +20,7 @@
 		<h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
 		<nav>
 			<ul>
-				<li>projets</li>
+				<li><a href="index.html">projets</a></li>
 				<li>contact</li>
 				<li>login</li>
 				<li><img class="insta" src="./assets/icons/instagram.png" alt="Instagram"></li>
@@ -30,12 +30,12 @@
     <main>
         <section id="login">
 			<h2>Log In</h2>
-			<form action="#" method="post">
+			<form  method="post" enctype="multipart/form-data">
 				<label for="email">Email</label>
-				<input type="email" name="email" id="email">
+				<input type="email" name="email" id="email" id=emailErrorMsg>
                 <label for="password">Mot de passe</label>
-				<input type="text" name="password" id="password">
-                <input type="submit" value="Se connecter">
+				<input type="text" name="password" id="password" id=passwordErrorMsg>
+                <input type="submit" value="Se connecter"id="loginForm">
 			</form>
             <p class="forget">Mot de passe oublié?</p>
             
