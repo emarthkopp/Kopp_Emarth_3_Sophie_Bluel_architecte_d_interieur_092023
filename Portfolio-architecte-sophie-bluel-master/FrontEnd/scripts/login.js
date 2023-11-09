@@ -28,7 +28,6 @@ function login() {
         fetch("http://localhost:5678/api/users/login", {
           method: "POST",
           headers: {
-            'Authorization' : 'bearer',
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'mode': 'cors'
@@ -40,19 +39,10 @@ function login() {
           return res.json();
         })
         .then((data) => {
-            if (email === email && password === password) {
-
-                // Stocker l'information d'authentification dans le localStorage
-                localStorage.setItem('userid', 'token');
-
-                // Rediriger l'utilisateur vers une page sécurisée
-                window.location.href = 'index.html';
-            } else {
-                // Authentification échouée
-                alert('Authentification échouée');
-            }
+          localStorage.setItem('userId', data.userId);
+          localStorage.setItem('token', data.token);
+         window.location.href = 'index.html';
          
-          console.log(data);
         })
         .catch((error) => {
           console.error("Erreur :", error);

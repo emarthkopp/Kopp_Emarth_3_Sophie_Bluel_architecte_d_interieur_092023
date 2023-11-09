@@ -1,3 +1,6 @@
+let token = localStorage.getItem('token')
+
+
 const container = document.getElementById("gallery")
 
 fetch("http://localhost:5678/api/works")
