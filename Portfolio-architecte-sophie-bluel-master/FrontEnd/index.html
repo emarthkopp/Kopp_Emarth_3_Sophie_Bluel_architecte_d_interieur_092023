@@ -11,18 +11,25 @@
 		rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
+	<script src="https://kit.fontawesome.com/e3c7343612.js" crossorigin="anonymous"></script>
 	<script src="scripts/config.js" defer></script>
 	<script src="scripts/script.js" defer></script>
 </head>
 
 <body>
+	<div class="connected"><button class="btnEdit"><i class="fa-regular fa-pen-to-square"></i> Mode édition</button>
+	</div>
+
+
 	<header>
 		<h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
 		<nav>
+
 			<ul>
 				<li>projets</li>
 				<li>contact</li>
-				<li><a href="login.html">login</a></li>
+				<li class="connected"><a href="#logout">logout</a></li>
+				<li class="disconnected"><a href="login.html">login</a></li>
 				<li><img class="insta" src="./assets/icons/instagram.png" alt="Instagram"></li>
 			</ul>
 		</nav>
@@ -39,17 +46,34 @@
 				<p>Chaque projet sera étudié en commun, de façon à mettre en valeur les volumes, les matières et les
 					couleurs dans le respect de l’esprit des lieux et le choix adapté des matériaux. Le suivi du
 					chantier sera assuré dans le souci du détail, le respect du planning et du budget.</p>
-				<p>En cas de besoin, une équipe pluridisciplinaire peut-être constituée : architecte DPLG,
-					décorateur(trice)</p>
+				<p>En cas de besoin, une équipe pluridisciplinaire peut être constituée : architecte DPLG,
+					décorateur(trice).</p>
 			</article>
 		</section>
 		<section id="portfolio">
-			<h2>Mes Projets</h2>
-			<div class="filters">
-				<button type="submit" id="all">Tous</button>
-				<button id="objects">Objets</button>
-				<button id="flats">Appartements</button>
-				<button id="hotels">Hôtels & restaurants</button>
+			<div id="projects">
+				<h2>Mes Projets</h2>
+				<button class="connected" id="btnProjects"><i class="fa-regular fa-pen-to-square"></i>Modifier</button>
+				<div id="modalModification" class="modal">
+					<div id="modalGlobal">
+						<div class="modalHeader">
+							<i class="fa-solid fa-xmark" id="closeModal"></i>
+							<h3 id="modalTitle">Galerie photo</h3>
+						</div>
+						<div class="modalBody" id="modalContent">
+						</div>
+						<hr id="modalLine">
+						<div id="modalFooter">
+							<button id="btnModalFooter">Ajouter une photo</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="filters" class="disconnected">
+				<button class="btnFilters" type="submit" id="all">Tous</button>
+				<button class="btnFilters" id="objects">Objets</button>
+				<button class="btnFilters" id="flats">Appartements</button>
+				<button class="btnFilters" id="hotels">Hôtels & restaurants</button>
 			</div>
 			<div class="gallery" id="gallery">
 			</div>
