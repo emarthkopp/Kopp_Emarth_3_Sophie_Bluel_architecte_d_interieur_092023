@@ -13,7 +13,7 @@ fetch("http://localhost:5678/api/works")
     projects = data;
     // Traiter les données reçues
     for (works in data) {
-
+    // Création d'une balise html dans le DOM
       container.innerHTML += `<figure>
       <img src=${data[works].imageUrl} alt=${data[works].title}>
       <figcaption>${data[works].title}</figcaption>
@@ -22,16 +22,20 @@ fetch("http://localhost:5678/api/works")
   })
   .catch(error => {
     // Gérer les erreurs
-    //console.error('Erreur lors de la requête Fetch :', error);
+    console.error('Erreur lors de la requête', error);
   });
 
+  //Récupération des balises des boutons de filtres
 const buttonObjects = document.getElementById("objects");
+  //création de la fonction qui filtre au clic sur le bouton
 buttonObjects.addEventListener("click", function () {
-
+  //filtre les works par id
   const objectsFiltres = projects.filter((works) =>
     works.categoryId == 1
   )
+  //vide le container de ce qui y était affiché
   container.innerHTML = "";
+  //recrée un container avec uniquement les works correspondant au filtre
   for (works in objectsFiltres) {
 
     container.innerHTML += `<figure>
@@ -87,7 +91,7 @@ buttonAll.addEventListener("click", function () {
   }
 });
 
-
+//vérifie si le token est valide et affiche ou non es éléments dépendant de la validité
 if (localStorage.getItem('token')) {
   let elementsConnected = document.querySelectorAll('.connected');
 
@@ -129,14 +133,21 @@ addEventListener("hashchange", (event) => {
   }
 });
 
+//création des variables nécessaires à la crétion de la modale de modification et lien avec les balises HTML
 const modalModif = document.getElementById("modalModification");
 const btnOpenModal = document.getElementById("btnProjects");
 const btnCloseModal = document.getElementById("closeModal");
 const modalContent = document.getElementById("modalContent");
-
+const btnModFooter = document.getElementById("btnModalFooter");
+//masque la modale par défaut
 modalModif.style.display = "none";
-
+//au clic ouvre la modale et lance l'appel
 btnOpenModal.onclick = function () {
+  document.getElementById("modalTitle").innerHTML='Galerie photo';
+  document.getElementById("btnModalFooter").innerHTML='Ajouter une photo'
+  document.getElementById("btnModalFooter").className = "btnGreen"
+  document.getElementById("modalContentAdd").style.display = "none";
+  document.getElementById("arrow").style.display = "none";
   modalModif.style.display = "block";
   fetch("http://localhost:5678/api/works")
     .then(response => {
@@ -146,11 +157,14 @@ btnOpenModal.onclick = function () {
       return response.json();
     })
     .then(data => {
+      //vide la modale de l'appel précédent
       modalContent.innerHTML = "";
       for (works in data) {
-        modalContent.innerHTML += `<figure>
-          <img src=${data[works].imageUrl} alt=${data[works].title} >
-          <i class="fa-solid fa-trash-can" id="trash"></i>
+        modalContent.innerHTML += `<figure class="modalFigure">
+          <div class="imageContainer" id="${data[works].id}">
+            <img src=${data[works].imageUrl} alt=${data[works].title}>
+            <i class="fa-solid fa-trash-can trash" id="trash_${data[works].id}" onclick="trash(${data[works].id})"></i>
+          </div>
         </figure>`;
       }
     })
@@ -159,15 +173,27 @@ btnOpenModal.onclick = function () {
     });
 };
 
+btnModFooter.onclick = function () {
+  document.getElementById("modalTitle").innerHTML='Ajout photo';
+  document.getElementById("modalContentAdd").style.display = "block";
+  document.getElementById("btnModalFooter").innerHTML='Valider'
+  document.getElementById("btnModalFooter").className = "btnGrey"
+  document.getElementById("arrow").style.display = "block";
+  modalContent.innerHTML = "";
+  modalModif.style.display = "block";
+};
+  
+//ferme la modale au clic sur le x
 btnCloseModal.onclick = function () {
   modalModif.style.display = "none";
 }
 
-
+//ferme la modale au clic en dehors
 window.onclick = function (event) {
   if (event.target == modalModif) {
     modalModif.style.display = "none";
   }
 };
-
-
+function trash (trashId){
+  alert(trashId)
+}
