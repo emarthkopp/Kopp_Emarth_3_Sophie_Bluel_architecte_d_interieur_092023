@@ -39,14 +39,13 @@ function login() {
         })
         //mise de la réponse au format attendu
         .then((res) => {
-          console.log(res);
           return res.json();
         })
         //récuration de l'ID et du token dans le local storage
         .then((data) => {
           localStorage.setItem('userId', data.userId);
           localStorage.setItem('token', data.token);
-         window.location.href = 'index.html';
+          window.location.href = 'index.html';
          
         })
         //gestion des erreurs

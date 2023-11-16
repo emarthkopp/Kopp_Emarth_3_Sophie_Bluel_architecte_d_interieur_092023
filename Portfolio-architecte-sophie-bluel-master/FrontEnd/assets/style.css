@@ -379,7 +379,24 @@ a {
 
 }
 
-.btnGrey , #btnAdd{
+#btnAdd{
+	font-family: 'Syne';
+	font-size: 16px;
+	font-weight: 700;
+	color: #306685;
+	background-color: #B9C5CC;
+	margin: 2em auto;
+	height: 37px;
+	width: auto;
+	text-align: center;
+	border:none;
+	border-radius: 60px;
+	padding: 0 60px 0 60px;
+	margin: 10px 5px 10px 5px;
+
+}
+
+.btnGrey{
 	font-family: 'Syne';
 	font-size: 16px;
 	font-weight: 700;
@@ -389,11 +406,10 @@ a {
 	height: 37px;
 	width: auto;
 	text-align: center;
+	border:none;
 	border-radius: 60px;
-	border: 1px solid #a7a7a7;
 	padding: 0 60px 0 60px;
 	margin: 10px 5px 10px 5px;
-
 }
 
 #filters {
@@ -442,13 +458,7 @@ a {
 #addForm {
 	width: 50%;
 	margin: auto;
-}
-
-#contact,
-#login,
-#addForm {
 	text-align: center;
-
 }
 
 #contact h2,
@@ -481,6 +491,8 @@ input {
 }
 #photoChange{
 	font-size: 76px;
+	color: #B9C5CC;
+	;
 }
 #addForm{
 	width: 80%;

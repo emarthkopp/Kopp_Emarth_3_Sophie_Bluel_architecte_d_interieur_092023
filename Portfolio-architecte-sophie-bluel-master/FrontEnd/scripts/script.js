@@ -91,7 +91,7 @@ buttonAll.addEventListener("click", function () {
   }
 });
 
-//vérifie si le token est valide et affiche ou non es éléments dépendant de la validité
+//vérifie si le token est valide et affiche ou non les éléments dépendant de la validité
 if (localStorage.getItem('token')) {
   let elementsConnected = document.querySelectorAll('.connected');
 
@@ -133,16 +133,47 @@ addEventListener("hashchange", (event) => {
   }
 });
 
-//création des variables nécessaires à la crétion de la modale de modification et lien avec les balises HTML
+//création des variables nécessaires à la création de la modale de modification et lien avec les balises HTML
 const modalModif = document.getElementById("modalModification");
 const btnOpenModal = document.getElementById("btnProjects");
 const btnCloseModal = document.getElementById("closeModal");
 const modalContent = document.getElementById("modalContent");
 const btnModFooter = document.getElementById("btnModalFooter");
+const btnArrow = document.getElementById("arrow");
 //masque la modale par défaut
 modalModif.style.display = "none";
 //au clic ouvre la modale et lance l'appel
-btnOpenModal.onclick = function () {
+function modalGalery () {
+  document.getElementById("modalTitle").innerHTML='Galerie photo';
+  document.getElementById("btnModalFooter").innerHTML='Ajouter une photo'
+  document.getElementById("btnModalFooter").className = "btnGreen"
+  document.getElementById("modalContentAdd").style.display = "none";
+  document.getElementById("arrow").style.display = "none";
+  modalModif.style.display = "block";
+  fetch("http://localhost:5678/api/works")
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Erreur : ' + response.status);
+      }
+      return response.json();
+    })
+    .then(data => {
+      //vide la modale de l'appel précédent
+      modalContent.innerHTML = "";
+      for (works in data) {
+        modalContent.innerHTML += `<figure class="modalFigure">
+          <div class="imageContainer" id="${data[works].id}">
+            <img src=${data[works].imageUrl} alt=${data[works].title}>
+            <i class="fa-solid fa-trash-can trash" id="trash_${data[works].id}" onclick="trash(${data[works].id})"></i>
+          </div>
+        </figure>`;
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    });
+};
+function modalGalery () {
   document.getElementById("modalTitle").innerHTML='Galerie photo';
   document.getElementById("btnModalFooter").innerHTML='Ajouter une photo'
   document.getElementById("btnModalFooter").className = "btnGreen"
@@ -173,7 +204,12 @@ btnOpenModal.onclick = function () {
     });
 };
 
-btnModFooter.onclick = function () {
+btnOpenModal.onclick = () => {
+modalGalery()
+};
+
+function modalNewWork() {
+  //création des éléments nécessaires à la craétion de la modale d'ajout
   document.getElementById("modalTitle").innerHTML='Ajout photo';
   document.getElementById("modalContentAdd").style.display = "block";
   document.getElementById("btnModalFooter").innerHTML='Valider'
@@ -182,6 +218,23 @@ btnModFooter.onclick = function () {
   modalContent.innerHTML = "";
   modalModif.style.display = "block";
 };
+
+function modalNewWorkHide() {
+  //création des éléments nécessaires à la craétion de la modale d'ajout
+
+  document.getElementById("arrow").style.display = "none";
+  modalContent.innerHTML = "";
+  modalModif.style.display = "block";
+};
+
+btnModFooter.onclick = () => {
+  modalNewWork();
+};
+
+btnArrow.onclick = () => {
+  modalGalery ();
+}
+
   
 //ferme la modale au clic sur le x
 btnCloseModal.onclick = function () {
@@ -193,7 +246,38 @@ window.onclick = function (event) {
   if (event.target == modalModif) {
     modalModif.style.display = "none";
   }
-};
-function trash (trashId){
-  alert(trashId)
 }
+
+function trash(trashId) {
+  const confirmation = confirm(`Voulez-vous supprimer cet élément ?`);
+  // Si l'utilisateur annule, ne pas supprimer
+  if (!confirmation) return; 
+
+  fetch("http://localhost:5678/api/works/" + trashId, {
+    method: "DELETE",
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer "+localStorage.getItem('token')
+    },
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('La suppression a échoué');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Supprimer l'élément du DOM après la suppression réussie
+    const elementToRemove = document.getElementById(trashId);
+    if (elementToRemove) {
+      elementToRemove.remove();
+    } else {
+      console.error('Élément à supprimer non trouvé ');
+    }
+  })
+  .catch(error => {
+    console.error(error);
+  });
+}
+
+
