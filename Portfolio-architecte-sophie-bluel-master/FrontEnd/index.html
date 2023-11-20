@@ -65,16 +65,26 @@
 						</div>
 						<div class="modalBody" id="modalContentAdd">
 							<div id="addPicture">
+								<!-- Placez une balise img vide pour afficher l'image sélectionnée -->
+								<img id="imagePreview" src="" alt="" style="max-width: 200px; max-height: 200px; display: none;">
+
+								<!-- L'icône à remplacer -->
 								<i class="fa-regular fa-image" id="photoChange"></i>
+
 								<button id="btnAdd"> + Ajouter photo</button>
 								<p id="format">jpg. png. : 4mo max</p>
 							</div>
 							<div id="addForm">
-								<form  method="post" >
+								<form method="post">
 									<label for="title">Titre</label>
-									<input type="text" name="title" id="textAdd">
+									<input type="text" name="title" id="titleAdd">
 									<label for="category">Catégorie</label>
-									<input type="text" name="category" id="categoryAdd">
+									<select type="text" name="category" id="categoryAdd">
+										<option value="0"> </option>
+										<option value="1">Objets</option>
+										<option value="2">Appartements</option>
+										<option value="3">Hôtels & restaurants</option>
+									</select>
 								</form>
 							</div>
 						</div>

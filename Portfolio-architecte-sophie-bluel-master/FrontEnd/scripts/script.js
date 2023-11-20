@@ -140,6 +140,7 @@ const btnCloseModal = document.getElementById("closeModal");
 const modalContent = document.getElementById("modalContent");
 const btnModFooter = document.getElementById("btnModalFooter");
 const btnArrow = document.getElementById("arrow");
+const btnAdd = document.getElementById("btnAdd");
 //masque la modale par défaut
 modalModif.style.display = "none";
 //au clic ouvre la modale et lance l'appel
@@ -214,6 +215,7 @@ function modalNewWork() {
   document.getElementById("modalContentAdd").style.display = "block";
   document.getElementById("btnModalFooter").innerHTML='Valider'
   document.getElementById("btnModalFooter").className = "btnGrey"
+  document.getElementById("btnModalFooter").disabled = true;
   document.getElementById("arrow").style.display = "block";
   modalContent.innerHTML = "";
   modalModif.style.display = "block";
@@ -228,22 +230,35 @@ function modalNewWorkHide() {
 };
 
 btnModFooter.onclick = () => {
-  modalNewWork();
+
+  if (document.getElementById("btnModalFooter").innerHTML === 'Valider') {
+    newWorks();
+  } else {
+    modalNewWork();
+  }
 };
+
 
 btnArrow.onclick = () => {
   modalGalery ();
 }
 
+function resetImageAndIcon() {
+  imagePreview.src = "";
+  imagePreview.style.display = 'none';
+  photoChange.style.display = 'block';
+}
   
 //ferme la modale au clic sur le x
 btnCloseModal.onclick = function () {
+  resetImageAndIcon();
   modalModif.style.display = "none";
 }
 
 //ferme la modale au clic en dehors
 window.onclick = function (event) {
   if (event.target == modalModif) {
+    resetImageAndIcon();
     modalModif.style.display = "none";
   }
 }
@@ -278,6 +293,120 @@ function trash(trashId) {
   .catch(error => {
     console.error(error);
   });
+}
+
+let selectedFile = null;
+
+btnAdd.onclick = () => {
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+
+  fileInput.addEventListener('change', (event) => {
+    selectedFile = event.target.files[0];
+    
+    if (selectedFile) {
+      const reader = new FileReader();
+    
+      reader.onload = (fileLoadedEvent) => {
+        const binaryString = fileLoadedEvent.target.result;
+
+        // Afficher l'image et masquer l'icône
+        const imagePreview = document.getElementById('imagePreview');
+        const photoChangeIcon = document.getElementById('photoChange');
+  
+        imagePreview.src = binaryString;
+        imagePreview.style.display = 'block';
+  
+        photoChangeIcon.style.display = 'none';
+      };
+    
+      reader.readAsDataURL(selectedFile);
+    }
+    
+  });
+
+  // Cliquez sur l'élément input créé pour ouvrir la fenêtre de sélection de fichier
+  fileInput.click();
+};
+
+function newWorks() {
+  const titleValue = document.getElementById('titleAdd').value;
+  const categoryValue = document.getElementById('categoryAdd').value;
+
+  if (selectedFile) {
+    const reader = new FileReader();
+
+    reader.onload = (fileLoadedEvent) => {
+      const binaryString = fileLoadedEvent.target.result;
+
+      const payload = {
+        image: binaryString,
+        title: titleValue,
+        category: parseInt(categoryValue),
+      }
+
+      console.log(payload.image)
+
+      // Effectuez votre requête HTTP ici avec la chaîne binaire de l'image
+      fetch("http://localhost:5678/api/works/", {
+        method: 'POST',
+        headers: {
+          'Authorization': "Bearer " + localStorage.getItem('token'),
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'mode': 'cors'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Erreur lors de la requête vers l\'API');
+        }
+        return res.json();
+      })
+      .then(data => {
+        // Traitez la réponse si nécessaire
+        console.log('Réponse de l\'API :', data);
+      })
+      .catch(error => {
+        console.error('Erreur lors de la requête :', error);
+      });
+    };
+
+    reader.readAsDataURL(selectedFile); // Lecture du fichier en tant qu'URL Data
+  } else {
+    console.error('Aucun fichier sélectionné');
+  }
+}
+
+// Création d'une instance de MutationObserver
+const observer = new MutationObserver(() => {
+  toggleButtonState();
+});
+
+// Configuration de l'observateur pour surveiller les attributs
+const observerConfig = { attributes: true, attributeFilter: ['style'] };
+
+observer.observe(imagePreview, observerConfig);
+document.getElementById('titleAdd').addEventListener('input', toggleButtonState);
+document.getElementById('categoryAdd').addEventListener('change', toggleButtonState);
+
+// Fonction pour activer le bouton si toutes les conditions sont remplies
+function toggleButtonState() {
+  const titleValue = document.getElementById('titleAdd').value.trim();
+  const categoryValue = document.getElementById('categoryAdd').value.trim();
+
+  const imageDisplay = window.getComputedStyle(imagePreview).getPropertyValue('display');
+
+  if (titleValue !== '' && categoryValue !== '0' && imageDisplay !== 'none') {
+    document.getElementById("btnModalFooter").className ="btnGreen";
+    document.getElementById("btnModalFooter").disabled = false;
+
+  } else {
+    document.getElementById("btnModalFooter").className ="btnGrey";
+    document.getElementById("btnModalFooter").disabled = true;
+
+  }
 }
 
 

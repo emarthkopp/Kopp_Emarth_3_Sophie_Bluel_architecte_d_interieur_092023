@@ -21,7 +21,7 @@ function login() {
         document.getElementById('passwordErrorMsg').textContent = 'Erreur de saisie!';
   
       }
-      //cvariable utilisée dans la fonction connect
+      //variable utilisée dans la fonction connect
       const requestBody = {
         email: email,
         password: password
