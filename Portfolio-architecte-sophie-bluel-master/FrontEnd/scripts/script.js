@@ -318,6 +318,9 @@ btnAdd.onclick = () => {
         imagePreview.style.display = 'block';
   
         photoChangeIcon.style.display = 'none';
+        btnAdd.style.display = 'none';
+        format.style.display = 'none';
+       
       };
     
       reader.readAsDataURL(selectedFile);
@@ -345,16 +348,14 @@ function newWorks() {
         category: parseInt(categoryValue),
       }
 
-      console.log(payload.image)
-
-      // Effectuez votre requête HTTP ici avec la chaîne binaire de l'image
+      // Effectuer la requête HTTP avec l'image en binary
       fetch("http://localhost:5678/api/works/", {
         method: 'POST',
         headers: {
           'Authorization': "Bearer " + localStorage.getItem('token'),
           'Accept': 'application/json',
           'Content-Type': 'multipart/form-data',
-          'mode': 'cors'
+         
         },
         body: JSON.stringify(payload)
       })
@@ -409,4 +410,24 @@ function toggleButtonState() {
   }
 }
 
+fetch("http://localhost:5678/api/works")
+.then(response => {
+  if (!response.ok) {
+    throw new Error('Erreur : ' + response.status);
+  }
+  return response.json();
+})
+.then(data => {
+  container.innerHTML = ""; 
+
+  for (works in data) {
+    container.innerHTML += `<figure>
+      <img src=${data[works].imageUrl} alt=${data[works].title}>
+      <figcaption>${data[works].title}</figcaption>
+    </figure>`;
+  }
+})
+.catch(error => {
+  console.error(error);
+});
 
