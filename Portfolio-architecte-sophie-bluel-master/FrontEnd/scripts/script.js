@@ -174,36 +174,6 @@ function modalGalery () {
       console.error(error);
     });
 };
-function modalGalery () {
-  document.getElementById("modalTitle").innerHTML='Galerie photo';
-  document.getElementById("btnModalFooter").innerHTML='Ajouter une photo'
-  document.getElementById("btnModalFooter").className = "btnGreen"
-  document.getElementById("modalContentAdd").style.display = "none";
-  document.getElementById("arrow").style.display = "none";
-  modalModif.style.display = "block";
-  fetch("http://localhost:5678/api/works")
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Erreur : ' + response.status);
-      }
-      return response.json();
-    })
-    .then(data => {
-      //vide la modale de l'appel précédent
-      modalContent.innerHTML = "";
-      for (works in data) {
-        modalContent.innerHTML += `<figure class="modalFigure">
-          <div class="imageContainer" id="${data[works].id}">
-            <img src=${data[works].imageUrl} alt=${data[works].title}>
-            <i class="fa-solid fa-trash-can trash" id="trash_${data[works].id}" onclick="trash(${data[works].id})"></i>
-          </div>
-        </figure>`;
-      }
-    })
-    .catch(error => {
-      console.error(error);
-    });
-};
 
 btnOpenModal.onclick = () => {
 modalGalery()
@@ -229,14 +199,14 @@ function modalNewWorkHide() {
   modalModif.style.display = "block";
 };
 
-btnModFooter.onclick = () => {
-
+btnModFooter.addEventListener ("click",(event)=>  {
+console.log(event,"toto")
   if (document.getElementById("btnModalFooter").innerHTML === 'Valider') {
     newWorks();
   } else {
     modalNewWork();
   }
-};
+});
 
 
 btnArrow.onclick = () => {
