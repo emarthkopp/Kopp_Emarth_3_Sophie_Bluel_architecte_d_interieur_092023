@@ -13,7 +13,7 @@ fetch("http://localhost:5678/api/works")
     projects = data;
     // Traiter les données reçues
     for (works in data) {
-    // Création d'une balise html dans le DOM
+      // Création d'une balise html dans le DOM
       container.innerHTML += `<figure>
       <img src=${data[works].imageUrl} alt=${data[works].title}>
       <figcaption>${data[works].title}</figcaption>
@@ -25,9 +25,9 @@ fetch("http://localhost:5678/api/works")
     console.error('Erreur lors de la requête', error);
   });
 
-  //Récupération des balises des boutons de filtres
+//Récupération des balises des boutons de filtres
 const buttonObjects = document.getElementById("objects");
-  //création de la fonction qui filtre au clic sur le bouton
+//création de la fonction qui filtre au clic sur le bouton
 buttonObjects.addEventListener("click", function () {
   //filtre les works par id
   const objectsFiltres = projects.filter((works) =>
@@ -144,10 +144,11 @@ const btnAdd = document.getElementById("btnAdd");
 //masque la modale par défaut
 modalModif.style.display = "none";
 //au clic ouvre la modale et lance l'appel
-function modalGalery () {
-  document.getElementById("modalTitle").innerHTML='Galerie photo';
-  document.getElementById("btnModalFooter").innerHTML='Ajouter une photo'
-  document.getElementById("btnModalFooter").className = "btnGreen"
+function modalGalery() {
+  document.getElementById("modalTitle").innerHTML = 'Galerie photo';
+  document.getElementById("btnModalFooter").innerHTML = 'Ajouter une photo'
+  document.getElementById("btnModalFooter").className = "btnGreen";
+  document.getElementById("btnModalFooter").disabled = false;
   document.getElementById("modalContentAdd").style.display = "none";
   document.getElementById("arrow").style.display = "none";
   modalModif.style.display = "block";
@@ -176,14 +177,14 @@ function modalGalery () {
 };
 
 btnOpenModal.onclick = () => {
-modalGalery()
+  modalGalery()
 };
 
 function modalNewWork() {
   //création des éléments nécessaires à la craétion de la modale d'ajout
-  document.getElementById("modalTitle").innerHTML='Ajout photo';
+  document.getElementById("modalTitle").innerHTML = 'Ajout photo';
   document.getElementById("modalContentAdd").style.display = "block";
-  document.getElementById("btnModalFooter").innerHTML='Valider'
+  document.getElementById("btnModalFooter").innerHTML = 'Valider'
   document.getElementById("btnModalFooter").className = "btnGrey"
   document.getElementById("btnModalFooter").disabled = true;
   document.getElementById("arrow").style.display = "block";
@@ -199,8 +200,7 @@ function modalNewWorkHide() {
   modalModif.style.display = "block";
 };
 
-btnModFooter.addEventListener ("click",(event)=>  {
-console.log(event,"toto")
+btnModFooter.addEventListener("click", (event) => {
   if (document.getElementById("btnModalFooter").innerHTML === 'Valider') {
     newWorks();
   } else {
@@ -210,7 +210,7 @@ console.log(event,"toto")
 
 
 btnArrow.onclick = () => {
-  modalGalery ();
+  modalGalery();
 }
 
 function resetImageAndIcon() {
@@ -218,7 +218,7 @@ function resetImageAndIcon() {
   imagePreview.style.display = 'none';
   photoChange.style.display = 'block';
 }
-  
+
 //ferme la modale au clic sur le x
 btnCloseModal.onclick = function () {
   resetImageAndIcon();
@@ -236,33 +236,33 @@ window.onclick = function (event) {
 function trash(trashId) {
   const confirmation = confirm(`Voulez-vous supprimer cet élément ?`);
   // Si l'utilisateur annule, ne pas supprimer
-  if (!confirmation) return; 
+  if (!confirmation) return;
 
   fetch("http://localhost:5678/api/works/" + trashId, {
     method: "DELETE",
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': "Bearer "+localStorage.getItem('token')
+      'Authorization': "Bearer " + localStorage.getItem('token')
     },
   })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('La suppression a échoué');
-    }
-    return response.json();
-  })
-  .then(data => {
-    // Supprimer l'élément du DOM après la suppression réussie
-    const elementToRemove = document.getElementById(trashId);
-    if (elementToRemove) {
-      elementToRemove.remove();
-    } else {
-      console.error('Élément à supprimer non trouvé ');
-    }
-  })
-  .catch(error => {
-    console.error(error);
-  });
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('La suppression a échoué');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Supprimer l'élément du DOM après la suppression réussie
+      const elementToRemove = document.getElementById(trashId);
+      if (elementToRemove) {
+        elementToRemove.remove();
+      } else {
+        console.error('Élément à supprimer non trouvé ');
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    });
 }
 
 let selectedFile = null;
@@ -273,29 +273,29 @@ btnAdd.onclick = () => {
 
   fileInput.addEventListener('change', (event) => {
     selectedFile = event.target.files[0];
-    
+
     if (selectedFile) {
       const reader = new FileReader();
-    
+
       reader.onload = (fileLoadedEvent) => {
         const binaryString = fileLoadedEvent.target.result;
 
         // Afficher l'image et masquer l'icône
         const imagePreview = document.getElementById('imagePreview');
         const photoChangeIcon = document.getElementById('photoChange');
-  
+
         imagePreview.src = binaryString;
         imagePreview.style.display = 'block';
-  
+
         photoChangeIcon.style.display = 'none';
         btnAdd.style.display = 'none';
         format.style.display = 'none';
-       
+
       };
-    
+
       reader.readAsDataURL(selectedFile);
     }
-    
+
   });
 
   // Cliquez sur l'élément input créé pour ouvrir la fenêtre de sélection de fichier
@@ -303,46 +303,68 @@ btnAdd.onclick = () => {
 };
 
 function newWorks() {
+  console.log("toto")
   const titleValue = document.getElementById('titleAdd').value;
   const categoryValue = document.getElementById('categoryAdd').value;
+  const imageValue = document.getElementById('imagePreview').value;
 
   if (selectedFile) {
-    const reader = new FileReader();
+   const reader = new FileReader();
 
     reader.onload = (fileLoadedEvent) => {
       const binaryString = fileLoadedEvent.target.result;
+
 
       const payload = {
         image: binaryString,
         title: titleValue,
         category: parseInt(categoryValue),
-      }
-
+      };
+      console.log(payload)
       // Effectuer la requête HTTP avec l'image en binary
-      fetch("http://localhost:5678/api/works/", {
-        method: 'POST',
+      fetch("http://localhost:5678/api/works", {
+        method: "POST",
         headers: {
           'Authorization': "Bearer " + localStorage.getItem('token'),
-          'Accept': 'application/json',
+          //'Accept': 'application/json',
           'Content-Type': 'multipart/form-data',
-         
+          'mode': 'cors'
+
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Erreur lors de la requête vers l\'API');
-        }
-        return res.json();
-      })
-      .then(data => {
-        // Traitez la réponse si nécessaire
-        console.log('Réponse de l\'API :', data);
-      })
-      .catch(error => {
-        console.error('Erreur lors de la requête :', error);
-      });
-    };
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error('Erreur lors de la requête vers l\'API');
+          }
+          return res.json();
+        })
+        .then(data => {
+          console.log('Réponse de l\'API :', data);
+          fetch("http://localhost:5678/api/works")
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Erreur : ' + response.status);
+              }
+              return response.json();
+            })
+            .then(data => {
+              container.innerHTML = "";
+              for (works in data) {
+                container.innerHTML += `<figure>
+              <img src=${data[works].imageUrl} alt=${data[works].title}>
+              <figcaption>${data[works].title}</figcaption>
+            </figure>`;
+              }
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        })
+        .catch(error => {
+          console.error('Erreur lors de la requête :', error);
+        });
+    //};
 
     reader.readAsDataURL(selectedFile); // Lecture du fichier en tant qu'URL Data
   } else {
@@ -370,34 +392,14 @@ function toggleButtonState() {
   const imageDisplay = window.getComputedStyle(imagePreview).getPropertyValue('display');
 
   if (titleValue !== '' && categoryValue !== '0' && imageDisplay !== 'none') {
-    document.getElementById("btnModalFooter").className ="btnGreen";
+    document.getElementById("btnModalFooter").className = "btnGreen";
     document.getElementById("btnModalFooter").disabled = false;
 
   } else {
-    document.getElementById("btnModalFooter").className ="btnGrey";
+    document.getElementById("btnModalFooter").className = "btnGrey";
     document.getElementById("btnModalFooter").disabled = true;
 
   }
 }
 
-fetch("http://localhost:5678/api/works")
-.then(response => {
-  if (!response.ok) {
-    throw new Error('Erreur : ' + response.status);
-  }
-  return response.json();
-})
-.then(data => {
-  container.innerHTML = ""; 
-
-  for (works in data) {
-    container.innerHTML += `<figure>
-      <img src=${data[works].imageUrl} alt=${data[works].title}>
-      <figcaption>${data[works].title}</figcaption>
-    </figure>`;
-  }
-})
-.catch(error => {
-  console.error(error);
-});
 
