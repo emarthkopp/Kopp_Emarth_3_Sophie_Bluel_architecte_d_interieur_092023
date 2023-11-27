@@ -188,6 +188,9 @@ function modalNewWork() {
   document.getElementById("btnModalFooter").className = "btnGrey"
   document.getElementById("btnModalFooter").disabled = true;
   document.getElementById("arrow").style.display = "block";
+  document.getElementById("footerLine").style.display = "none";
+  document.getElementById("btnModalFooter").style.display = "none";
+  
   modalContent.innerHTML = "";
   modalModif.style.display = "block";
 };
@@ -211,6 +214,8 @@ btnModFooter.addEventListener("click", (event) => {
 
 btnArrow.onclick = () => {
   modalGalery();
+  document.getElementById("footerLine").style.display = "Block";
+  document.getElementById("btnModalFooter").style.display = "Block";
 }
 
 function resetImageAndIcon() {
@@ -266,18 +271,15 @@ function trash(trashId) {
 }
 
 let selectedFile = null;
-
 btnAdd.onclick = () => {
-  const fileInput = document.createElement('input');
-  fileInput.type = 'file';
-
+  const fileInput = document.getElementById('inputAdd');
   fileInput.addEventListener('change', (event) => {
     selectedFile = event.target.files[0];
 
     if (selectedFile) {
       const reader = new FileReader();
 
-      reader.onload = (fileLoadedEvent) => {
+      reader.onload = (fileLoadedEvent) => { document.getElementById('');
         const binaryString = fileLoadedEvent.target.result;
 
         // Afficher l'image et masquer l'icône
@@ -294,83 +296,55 @@ btnAdd.onclick = () => {
       };
 
       reader.readAsDataURL(selectedFile);
+      fileInput.removeEventListener('change');
     }
 
   });
+  
 
   // Cliquez sur l'élément input créé pour ouvrir la fenêtre de sélection de fichier
-  fileInput.click();
+  fileInput.click()
 };
+document.getElementById("validateNewWork").addEventListener('click', (event) => {
+  event.preventDefault(); 
 
-function newWorks() {
-  console.log("toto")
   const titleValue = document.getElementById('titleAdd').value;
   const categoryValue = document.getElementById('categoryAdd').value;
-  const imageValue = document.getElementById('imagePreview').value;
+  const selectedFile = document.getElementById('inputAdd').files[0]; // Récupération du fichier sélectionné
 
   if (selectedFile) {
-   const reader = new FileReader();
+    const formData = new FormData(); 
 
-    reader.onload = (fileLoadedEvent) => {
-      const binaryString = fileLoadedEvent.target.result;
+    formData.append('image', selectedFile); 
+    formData.append('title', titleValue);
+    formData.append('category', parseInt(categoryValue));
 
-
-      const payload = {
-        image: binaryString,
-        title: titleValue,
-        category: parseInt(categoryValue),
-      };
-      console.log(payload)
-      // Effectuer la requête HTTP avec l'image en binary
-      fetch("http://localhost:5678/api/works", {
-        method: "POST",
-        headers: {
-          'Authorization': "Bearer " + localStorage.getItem('token'),
-          //'Accept': 'application/json',
-          'Content-Type': 'multipart/form-data',
-          'mode': 'cors'
-
-        },
-        body: JSON.stringify(payload),
-      })
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error('Erreur lors de la requête vers l\'API');
-          }
-          return res.json();
-        })
-        .then(data => {
-          console.log('Réponse de l\'API :', data);
-          fetch("http://localhost:5678/api/works")
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Erreur : ' + response.status);
-              }
-              return response.json();
-            })
-            .then(data => {
-              container.innerHTML = "";
-              for (works in data) {
-                container.innerHTML += `<figure>
-              <img src=${data[works].imageUrl} alt=${data[works].title}>
-              <figcaption>${data[works].title}</figcaption>
-            </figure>`;
-              }
-            })
-            .catch(error => {
-              console.error(error);
-            });
-        })
-        .catch(error => {
-          console.error('Erreur lors de la requête :', error);
-        });
-    //};
-
-    reader.readAsDataURL(selectedFile); // Lecture du fichier en tant qu'URL Data
+    fetch("http://localhost:5678/api/works", {
+      method: "POST",
+      headers: {
+        'Authorization': "Bearer " + localStorage.getItem('token'),
+        'Accept': 'application/json',
+        
+      },
+      body: formData 
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('Erreur lors de la requête vers l\'API');
+      }
+      return res.json();
+    })
+    .then(data => {
+      console.log('Réponse de l\'API :', data);
+      
+    })
+    .catch(error => {
+      console.error('Erreur lors de la requête :', error);
+    });
   } else {
     console.error('Aucun fichier sélectionné');
   }
-}
+});
 
 // Création d'une instance de MutationObserver
 const observer = new MutationObserver(() => {
@@ -392,14 +366,13 @@ function toggleButtonState() {
   const imageDisplay = window.getComputedStyle(imagePreview).getPropertyValue('display');
 
   if (titleValue !== '' && categoryValue !== '0' && imageDisplay !== 'none') {
-    document.getElementById("btnModalFooter").className = "btnGreen";
-    document.getElementById("btnModalFooter").disabled = false;
+    document.getElementById("validateNewWork").className = "btnGreen";
+    document.getElementById("validateNewWork").disabled = false;
 
   } else {
-    document.getElementById("btnModalFooter").className = "btnGrey";
-    document.getElementById("btnModalFooter").disabled = true;
+    document.getElementById("validateNewWork").className = "btnGrey";
+    document.getElementById("validateNewWork").disabled = true;
 
   }
 }
-
 

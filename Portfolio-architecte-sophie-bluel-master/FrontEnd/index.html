@@ -53,7 +53,7 @@
 			<div id="projects">
 				<h2>Mes Projets</h2>
 				<button class="connected" id="btnProjects"><i class="fa-regular fa-pen-to-square"></i>Modifier</button>
-				<div id="modalModification" >
+				<div id="modalModification">
 					<div class="modalGlobal">
 						<div class="modalHeader">
 							<i class="fa-solid fa-arrow-left" id="arrow"></i>
@@ -63,14 +63,15 @@
 						<div class="modalBody" id="modalContent">
 						</div>
 						<div class="modalBody" id="modalContentAdd">
-							<div id="addPicture">
-								<img id="imagePreview" src="" alt="" >
-								<i class="fa-regular fa-image" id="photoChange"></i>
-								<button id="btnAdd"> + Ajouter photo</button>
-								<p id="format">jpg. png. : 4mo max</p>
-							</div>
-							<div id="addForm">
-								<form method="post">
+							<form method="post" enctype="multipart/form-data">
+								<div id="addPicture">
+									<img id="imagePreview" src="" alt="">
+									<i class="fa-regular fa-image" id="photoChange"></i>
+									<label for="inputAdd" id ="btnAdd"> + Ajouter Photo</label>
+									<input type="file" accept="image/*" name="photoAdded" id="inputAdd">
+									<p id="format">jpg. png. : 4mo max</p>
+								</div>
+								<div id="addForm">
 									<label for="title">Titre</label>
 									<input type="text" name="title" id="titleAdd">
 									<label for="category">Catégorie</label>
@@ -80,14 +81,14 @@
 										<option value="2">Appartements</option>
 										<option value="3">Hôtels & restaurants</option>
 									</select>
-								</form>
-							</div>
+								</div>
+								<hr class="modalLine" id="validateLine">
+								<input type="submit" value="valider" id="validateNewWork" class="btnGreen btnGrey">
+							</form>
 						</div>
-						<hr class="modalLine">
+						<hr class="modalLine" id="footerLine">
 						<div class="modalFooter">
-							<button id="btnModalFooter"></button>
-							<!-- créer le bouton et le changer en js
-							<button id="btnModalValidate"></button>-->
+							<button id="btnModalFooter">Ajouter une image</button>
 						</div>
 					</div>
 				</div>
@@ -104,7 +105,7 @@
 		<section id="contact">
 			<h2>Contact</h2>
 			<p>Vous avez un projet ? Discutons-en !</p>
-			<form id="formulaire"  action="#" method="post">
+			<form id="formulaire" action="#" method="post">
 				<label for="name">Nom</label>
 				<input type="text" name="name" id="name">
 				<label for="email">Email</label>
