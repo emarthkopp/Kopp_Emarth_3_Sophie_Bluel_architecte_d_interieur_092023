@@ -5,7 +5,7 @@ fetch("http://localhost:5678/api/works")
     // Gérer la réponse HTTP (conversion en JSON, gestion des erreurs)
 
     if (!response.ok) {
-      throw new Error('Erreur de réseau : ' + response.status);
+      throw new Error('Erreur : ' + response.status);
     }
     return response.json();
   })
@@ -218,22 +218,14 @@ btnArrow.onclick = () => {
   document.getElementById("btnModalFooter").style.display = "Block";
 }
 
-function resetImageAndIcon() {
-  imagePreview.src = "";
-  imagePreview.style.display = 'none';
-  photoChange.style.display = 'block';
-}
-
 //ferme la modale au clic sur le x
 btnCloseModal.onclick = function () {
-  resetImageAndIcon();
   modalModif.style.display = "none";
 }
 
 //ferme la modale au clic en dehors
 window.onclick = function (event) {
   if (event.target == modalModif) {
-    resetImageAndIcon();
     modalModif.style.display = "none";
   }
 }
@@ -269,9 +261,15 @@ function trash(trashId) {
       console.error(error);
     });
 }
+const imagePreview = document.getElementById('imagePreview');
+const photoChangeIcon = document.getElementById('photoChange');
+
+
 
 let selectedFile = null;
-btnAdd.onclick = () => {
+btnAdd.onclick = (event) => {
+  event.preventDefault();
+ 
   const fileInput = document.getElementById('inputAdd');
   fileInput.addEventListener('change', (event) => {
     selectedFile = event.target.files[0];
@@ -283,8 +281,6 @@ btnAdd.onclick = () => {
         const binaryString = fileLoadedEvent.target.result;
 
         // Afficher l'image et masquer l'icône
-        const imagePreview = document.getElementById('imagePreview');
-        const photoChangeIcon = document.getElementById('photoChange');
 
         imagePreview.src = binaryString;
         imagePreview.style.display = 'block';
@@ -296,14 +292,17 @@ btnAdd.onclick = () => {
       };
 
       reader.readAsDataURL(selectedFile);
-      fileInput.removeEventListener('change');
+      // fileInput.removeEventListener('change');
     }
 
   });
   
 
   // Cliquez sur l'élément input créé pour ouvrir la fenêtre de sélection de fichier
-  fileInput.click()
+  if (!selectedFile) {
+    fileInput.click();
+  }
+  
 };
 document.getElementById("validateNewWork").addEventListener('click', (event) => {
   event.preventDefault(); 
@@ -346,6 +345,7 @@ document.getElementById("validateNewWork").addEventListener('click', (event) => 
   }
 });
 
+
 // Création d'une instance de MutationObserver
 const observer = new MutationObserver(() => {
   toggleButtonState();
@@ -354,7 +354,7 @@ const observer = new MutationObserver(() => {
 // Configuration de l'observateur pour surveiller les attributs
 const observerConfig = { attributes: true, attributeFilter: ['style'] };
 
-observer.observe(imagePreview, observerConfig);
+observer.observe('imagePreview', observerConfig);
 document.getElementById('titleAdd').addEventListener('input', toggleButtonState);
 document.getElementById('categoryAdd').addEventListener('change', toggleButtonState);
 
