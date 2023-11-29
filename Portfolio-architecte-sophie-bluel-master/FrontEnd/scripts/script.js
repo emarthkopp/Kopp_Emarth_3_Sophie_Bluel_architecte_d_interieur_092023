@@ -1,15 +1,15 @@
-const container = document.getElementById("gallery")
+const container = document.getElementById("gallery");
 
 fetch("http://localhost:5678/api/works")
-  .then(response => {
+  .then((response) => {
     // Gérer la réponse HTTP (conversion en JSON, gestion des erreurs)
 
     if (!response.ok) {
-      throw new Error('Erreur : ' + response.status);
+      throw new Error("Erreur : " + response.status);
     }
     return response.json();
   })
-  .then(data => {
+  .then((data) => {
     projects = data;
     // Traiter les données reçues
     for (works in data) {
@@ -17,100 +17,67 @@ fetch("http://localhost:5678/api/works")
       container.innerHTML += `<figure>
       <img src=${data[works].imageUrl} alt=${data[works].title}>
       <figcaption>${data[works].title}</figcaption>
-    </figure>`
+    </figure>`;
     }
   })
-  .catch(error => {
+  .catch((error) => {
     // Gérer les erreurs
-    console.error('Erreur lors de la requête', error);
+    console.error("Erreur lors de la requête", error);
   });
 
-//Récupération des balises des boutons de filtres
-const buttonObjects = document.getElementById("objects");
-//création de la fonction qui filtre au clic sur le bouton
-buttonObjects.addEventListener("click", function () {
-  //filtre les works par id
-  const objectsFiltres = projects.filter((works) =>
-    works.categoryId == 1
-  )
-  //vide le container de ce qui y était affiché
+function filterWorks() {
+  setupFilterButtons();
+}
+
+function setupFilterButtons() {
+  const filterButtons = [
+    { id: "objects", filter: 1 },
+    { id: "flats", filter: 2 },
+    { id: "hotels", filter: 3 },
+    { id: "all", filter: null },
+  ];
+
+  filterButtons.forEach((button) => {
+    const filterButton = document.getElementById(button.id);
+    filterButton.addEventListener("click", () => filterProjects(button.filter));
+  });
+}
+
+function filterProjects(categoryId) {
+  const filteredProjects = categoryId
+    ? projects.filter((project) => project.categoryId === categoryId)
+    : projects;
+
   container.innerHTML = "";
-  //recrée un container avec uniquement les works correspondant au filtre
-  for (works in objectsFiltres) {
-
+  filteredProjects.forEach((project) => {
     container.innerHTML += `<figure>
-    <img src=${objectsFiltres[works].imageUrl} alt=${objectsFiltres[works].title}>
-    <figcaption>${objectsFiltres[works].title}</figcaption>
-  </figure>`
-  }
-})
-const buttonFlats = document.getElementById("flats");
-buttonFlats.addEventListener("click", function () {
+      <img src="${project.imageUrl}" alt="${project.title}">
+      <figcaption>${project.title}</figcaption>
+    </figure>`;
+  });
+}
 
-  const flatsFiltres = projects.filter(function (works) {
-    return works.categoryId == 2
-  })
-  container.innerHTML = "";
-  for (works in flatsFiltres) {
-
-    container.innerHTML += `<figure>
-    <img src=${flatsFiltres[works].imageUrl} alt=${flatsFiltres[works].title}>
-    <figcaption>${flatsFiltres[works].title}</figcaption>
-  </figure>`
-  }
-})
-
-const buttonHotels = document.getElementById("hotels");
-buttonHotels.addEventListener("click", function () {
-
-  const hotelsFiltres = projects.filter((works) =>
-    works.categoryId == 3
-  )
-  container.innerHTML = "";
-  for (works in hotelsFiltres) {
-
-    container.innerHTML += `<figure>
-    <img src=${hotelsFiltres[works].imageUrl} alt=${hotelsFiltres[works].title}>
-    <figcaption>${hotelsFiltres[works].title}</figcaption>
-  </figure>`
-  }
-})
-const buttonAll = document.getElementById("all");
-buttonAll.addEventListener("click", function () {
-
-  const allFiltres = projects.filter((works) =>
-    works
-  )
-  container.innerHTML = "";
-  for (works in allFiltres) {
-
-    container.innerHTML += `<figure>
-    <img src=${allFiltres[works].imageUrl} alt=${allFiltres[works].title}>
-    <figcaption>${allFiltres[works].title}</figcaption>
-  </figure>`
-  }
-});
+filterWorks();
 
 //vérifie si le token est valide et affiche ou non les éléments dépendant de la validité
-if (localStorage.getItem('token')) {
-  let elementsConnected = document.querySelectorAll('.connected');
+if (localStorage.getItem("token")) {
+  let elementsConnected = document.querySelectorAll(".connected");
 
   for (var i = 0; i < elementsConnected.length; i++) {
     elementsConnected[i].style.display = "block";
   }
-  let elemntsDisconnected = document.querySelectorAll('.disconnected');
+  let elemntsDisconnected = document.querySelectorAll(".disconnected");
 
   for (var i = 0; i < elemntsDisconnected.length; i++) {
     elemntsDisconnected[i].style.display = "none";
   }
-}
-else {
-  let elementsConnected = document.querySelectorAll('.connected');
+} else {
+  let elementsConnected = document.querySelectorAll(".connected");
 
   for (var i = 0; i < elementsConnected.length; i++) {
     elementsConnected[i].style.display = "none";
   }
-  let elemntsDisconnected = document.querySelectorAll('.disconnected');
+  let elemntsDisconnected = document.querySelectorAll(".disconnected");
 
   for (var i = 0; i < elemntsDisconnected.length; i++) {
     elemntsDisconnected[i].style.display = "block";
@@ -119,10 +86,10 @@ else {
 
 function logout() {
   // Supprime l'ID et le token du localStorage
-  localStorage.removeItem('userId');
-  localStorage.removeItem('token');
+  localStorage.removeItem("userId");
+  localStorage.removeItem("token");
   // Redirige l'utilisateur vers la page en étatnt déconnecté
-  window.location.href = 'index.html';
+  window.location.href = "index.html";
 }
 
 addEventListener("hashchange", (event) => {
@@ -145,21 +112,21 @@ const btnAdd = document.getElementById("btnAdd");
 modalModif.style.display = "none";
 //au clic ouvre la modale et lance l'appel
 function modalGalery() {
-  document.getElementById("modalTitle").innerHTML = 'Galerie photo';
-  document.getElementById("btnModalFooter").innerHTML = 'Ajouter une photo'
-  document.getElementById("btnModalFooter").className = "btnGreen";
+  document.getElementById("modalTitle").innerHTML = "Galerie photo";
+  document.getElementById("btnModalFooter").innerHTML = "Ajouter une photo";
+  document.getElementById("btnModalFooter").className = "btn bgActive";
   document.getElementById("btnModalFooter").disabled = false;
   document.getElementById("modalContentAdd").style.display = "none";
   document.getElementById("arrow").style.display = "none";
   modalModif.style.display = "block";
   fetch("http://localhost:5678/api/works")
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
-        throw new Error('Erreur : ' + response.status);
+        throw new Error("Erreur : " + response.status);
       }
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       //vide la modale de l'appel précédent
       modalContent.innerHTML = "";
       for (works in data) {
@@ -171,29 +138,28 @@ function modalGalery() {
         </figure>`;
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.error(error);
     });
-};
+}
 
 btnOpenModal.onclick = () => {
-  modalGalery()
+  modalGalery();
 };
 
 function modalNewWork() {
   //création des éléments nécessaires à la craétion de la modale d'ajout
-  document.getElementById("modalTitle").innerHTML = 'Ajout photo';
+  document.getElementById("modalTitle").innerHTML = "Ajout photo";
   document.getElementById("modalContentAdd").style.display = "block";
-  document.getElementById("btnModalFooter").innerHTML = 'Valider'
-  document.getElementById("btnModalFooter").className = "btnGrey"
+  document.getElementById("btnModalFooter").innerHTML = "Valider";
   document.getElementById("btnModalFooter").disabled = true;
   document.getElementById("arrow").style.display = "block";
   document.getElementById("footerLine").style.display = "none";
   document.getElementById("btnModalFooter").style.display = "none";
-  
+console.log(document.getElementById("validateNewWork").className);
   modalContent.innerHTML = "";
   modalModif.style.display = "block";
-};
+}
 
 function modalNewWorkHide() {
   //création des éléments nécessaires à la craétion de la modale d'ajout
@@ -201,34 +167,32 @@ function modalNewWorkHide() {
   document.getElementById("arrow").style.display = "none";
   modalContent.innerHTML = "";
   modalModif.style.display = "block";
-};
+}
 
 btnModFooter.addEventListener("click", (event) => {
-  if (document.getElementById("btnModalFooter").innerHTML === 'Valider') {
-    newWorks();
+  if (document.getElementById("btnModalFooter").innerHTML === "Valider") {
   } else {
     modalNewWork();
   }
 });
 
-
 btnArrow.onclick = () => {
   modalGalery();
   document.getElementById("footerLine").style.display = "Block";
   document.getElementById("btnModalFooter").style.display = "Block";
-}
+};
 
 //ferme la modale au clic sur le x
 btnCloseModal.onclick = function () {
   modalModif.style.display = "none";
-}
+};
 
 //ferme la modale au clic en dehors
 window.onclick = function (event) {
   if (event.target == modalModif) {
     modalModif.style.display = "none";
   }
-}
+};
 
 function trash(trashId) {
   const confirmation = confirm(`Voulez-vous supprimer cet élément ?`);
@@ -238,141 +202,124 @@ function trash(trashId) {
   fetch("http://localhost:5678/api/works/" + trashId, {
     method: "DELETE",
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': "Bearer " + localStorage.getItem('token')
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
     },
   })
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
-        throw new Error('La suppression a échoué');
+        throw new Error("La suppression a échoué");
       }
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       // Supprimer l'élément du DOM après la suppression réussie
       const elementToRemove = document.getElementById(trashId);
       if (elementToRemove) {
         elementToRemove.remove();
       } else {
-        console.error('Élément à supprimer non trouvé ');
+        console.error("Élément à supprimer non trouvé ");
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.error(error);
     });
 }
-const imagePreview = document.getElementById('imagePreview');
-const photoChangeIcon = document.getElementById('photoChange');
-
-
+const imagePreview = document.getElementById("imagePreview");
+const photoChangeIcon = document.getElementById("photoChange");
 
 let selectedFile = null;
 btnAdd.onclick = (event) => {
   event.preventDefault();
- 
-  const fileInput = document.getElementById('inputAdd');
-  fileInput.addEventListener('change', (event) => {
+
+  const fileInput = document.getElementById("inputAdd");
+  fileInput.addEventListener("change", (event) => {
     selectedFile = event.target.files[0];
 
     if (selectedFile) {
       const reader = new FileReader();
 
-      reader.onload = (fileLoadedEvent) => { document.getElementById('');
+      reader.onload = (fileLoadedEvent) => {
+        document.getElementById("");
         const binaryString = fileLoadedEvent.target.result;
 
         // Afficher l'image et masquer l'icône
 
         imagePreview.src = binaryString;
-        imagePreview.style.display = 'block';
+        imagePreview.style.display = "block";
 
-        photoChangeIcon.style.display = 'none';
-        btnAdd.style.display = 'none';
-        format.style.display = 'none';
-
+        photoChangeIcon.style.display = "none";
+        btnAdd.style.display = "none";
+        format.style.display = "none";
       };
 
       reader.readAsDataURL(selectedFile);
-      // fileInput.removeEventListener('change');
     }
-
   });
-  
 
   // Cliquez sur l'élément input créé pour ouvrir la fenêtre de sélection de fichier
   if (!selectedFile) {
     fileInput.click();
   }
-  
 };
-document.getElementById("validateNewWork").addEventListener('click', (event) => {
-  event.preventDefault(); 
+document.getElementById("validateNewWork").addEventListener("click", (event) => {
+    event.preventDefault();
 
-  const titleValue = document.getElementById('titleAdd').value;
-  const categoryValue = document.getElementById('categoryAdd').value;
-  const selectedFile = document.getElementById('inputAdd').files[0]; // Récupération du fichier sélectionné
+    const titleValue = document.getElementById("titleAdd").value;
+    const categoryValue = document.getElementById("categoryAdd").value;
+    const selectedFile = document.getElementById("inputAdd").files[0]; // Récupération du fichier sélectionné
 
-  if (selectedFile) {
-    const formData = new FormData(); 
+    if (selectedFile) {
+      const resFormData = new FormData();
 
-    formData.append('image', selectedFile); 
-    formData.append('title', titleValue);
-    formData.append('category', parseInt(categoryValue));
+      resFormData.append("image", selectedFile);
+      resFormData.append("title", titleValue);
+      resFormData.append("category", parseInt(categoryValue));
 
-    fetch("http://localhost:5678/api/works", {
-      method: "POST",
-      headers: {
-        'Authorization': "Bearer " + localStorage.getItem('token'),
-        'Accept': 'application/json',
-        
-      },
-      body: formData 
-    })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error('Erreur lors de la requête vers l\'API');
-      }
-      return res.json();
-    })
-    .then(data => {
-      console.log('Réponse de l\'API :', data);
-      
-    })
-    .catch(error => {
-      console.error('Erreur lors de la requête :', error);
-    });
+      fetch("http://localhost:5678/api/works", {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          Accept: "application/json",
+        },
+        body: resFormData,
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Erreur lors de la requête vers l'API");
+          }
+          return res.json();
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la requête :", error);
+        });
+    } else {
+      console.error("Aucun fichier sélectionné");
+    }
+  });
+
+  document.getElementById("titleAdd").addEventListener('change',()=>{changeButtonState()});
+  document.getElementById("categoryAdd").addEventListener('change',()=>{changeButtonState()});
+  document.getElementById("inputAdd").addEventListener('change',()=>{changeButtonState()});
+
+function changeButtonState() {
+  const titleValue = document.getElementById("titleAdd").value;
+  const categoryValue = document.getElementById("categoryAdd").value;
+  const imageDisplay = window.getComputedStyle(imagePreview).getPropertyValue("display");
+  const validateButton = document.getElementById("validateNewWork");
+  console.log(titleValue !== "" && categoryValue !== "0" && imageDisplay !== "none");
+  if (titleValue !== "" && categoryValue !== "0" && imageDisplay !== "none") {
+    console.log("azer");
+    console.log(validateButton.classList);
+    validateButton.classList.remove("bgDisable");
+    validateButton.classList.add("bgActive");
+    console.log(validateButton.classList);
+    // validateButton.disabled = false;
+    
   } else {
-    console.error('Aucun fichier sélectionné');
-  }
-});
-
-
-// Création d'une instance de MutationObserver
-const observer = new MutationObserver(() => {
-  toggleButtonState();
-});
-
-// Configuration de l'observateur pour surveiller les attributs
-const observerConfig = { attributes: true, attributeFilter: ['style'] };
-
-observer.observe('imagePreview', observerConfig);
-document.getElementById('titleAdd').addEventListener('input', toggleButtonState);
-document.getElementById('categoryAdd').addEventListener('change', toggleButtonState);
-
-// Fonction pour activer le bouton si toutes les conditions sont remplies
-function toggleButtonState() {
-  const titleValue = document.getElementById('titleAdd').value.trim();
-  const categoryValue = document.getElementById('categoryAdd').value.trim();
-
-  const imageDisplay = window.getComputedStyle(imagePreview).getPropertyValue('display');
-
-  if (titleValue !== '' && categoryValue !== '0' && imageDisplay !== 'none') {
-    document.getElementById("validateNewWork").className = "btnGreen";
-    document.getElementById("validateNewWork").disabled = false;
-
-  } else {
-    document.getElementById("validateNewWork").className = "btnGrey";
-    document.getElementById("validateNewWork").disabled = true;
-
+    console.log("azertyuiop");
+    validateButton.classList.remove("bgActive");
+    validateButton.classList.add("bgDisable");
+    // validateButton.disabled = true;
   }
 }
-

@@ -16,7 +16,8 @@
 </head>
 
 <body>
-	<div class="connected btnEdit"><i class="fa-regular fa-pen-to-square"></i> Mode édition
+	<div class="connected btnEdit"><button class="btnEdit"><i class="fa-regular fa-pen-to-square"></i> Mode
+			édition</button>
 	</div>
 
 
@@ -63,18 +64,18 @@
 						<div class="modalBody" id="modalContent">
 						</div>
 						<div class="modalBody" id="modalContentAdd">
-							<form method="post" enctype="multipart/form-data">
+							<form method="post" enctype="multipart/form-data" id="formContainer">
 								<div id="addPicture">
 									<img id="imagePreview" src="" alt="">
 									<i class="fa-regular fa-image" id="photoChange"></i>
-									<label for="inputAdd" id ="btnAdd"> + Ajouter Photo</label>
+									<label for="inputAdd" id="btnAdd"> + Ajouter Photo</label>
 									<input type="file" accept="image/*" name="photoAdded" id="inputAdd">
 									<p id="format">jpg. png. : 4mo max</p>
 								</div>
 								<div id="addForm">
-									<label for="title">Titre</label>
+									<label for="titleAdd">Titre</label>
 									<input type="text" name="title" id="titleAdd">
-									<label for="category">Catégorie</label>
+									<label for="categoryAdd">Catégorie</label>
 									<select type="text" name="category" id="categoryAdd">
 										<option value="0"> </option>
 										<option value="1">Objets</option>
@@ -83,7 +84,8 @@
 									</select>
 								</div>
 								<hr class="modalLine" id="validateLine">
-								<input type="submit" value="valider" id="validateNewWork">
+								<div class="inputAdjust"><input type="submit" value="valider" id="validateNewWork" class="btn bgDisable">
+								</div>
 							</form>
 						</div>
 						<hr class="modalLine" id="footerLine">
@@ -107,12 +109,13 @@
 			<p>Vous avez un projet ? Discutons-en !</p>
 			<form id="formulaire" action="#" method="post">
 				<label for="name">Nom</label>
-				<input type="text" name="name" id="name">
+				<input type="text" name="name" id="name" autocomplete="name">
 				<label for="email">Email</label>
-				<input type="email" name="email" id="email">
+				<input type="email" name="email" id="email" autocomplete="email">
 				<label for="message">Message</label>
 				<textarea name="message" id="message" cols="30" rows="10"></textarea>
-				<input type="submit" value="Envoyer">
+				<div class="inputAdjust"><input type="submit" value="Envoyer" class="btn bgActive">
+				</div>
 			</form>
 		</section>
 	</main>

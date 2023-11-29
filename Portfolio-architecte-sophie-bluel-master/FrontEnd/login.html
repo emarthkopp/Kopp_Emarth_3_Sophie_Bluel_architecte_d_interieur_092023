@@ -31,10 +31,11 @@
 			<h2>Log In</h2>
 			<form  method="post" enctype="multipart/form-data">
 				<label for="email">Email</label>
-				<input type="email" name="email" id="email" id=emailErrorMsg>
+				<input type="email" name="email" id="email" class="emailErrorMsg" autocomplete="email">
                 <label for="password">Mot de passe</label>
-				<input type="text" name="password" id="password" id=passwordErrorMsg>
-                <input type="submit" value="Se connecter"id="loginForm">
+				<input type="text" name="password" id="password" class="passwordErrorMsg">
+                <div class="inputAdjust"><input type="submit" value="Se connecter" id="loginForm" class="btn bgActive">
+				</div>
 			</form>
             <p class="forget">Mot de passe oublié?</p>
             
