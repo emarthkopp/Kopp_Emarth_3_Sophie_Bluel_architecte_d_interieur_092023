@@ -290,6 +290,10 @@ document.getElementById("validateNewWork").addEventListener("click", (event) => 
           }
           return res.json();
         })
+        .then(data => {
+          console.log('Réponse de l\'API :', data);
+          
+        })
         .catch((error) => {
           console.error("Erreur lors de la requête :", error);
         });
@@ -314,12 +318,12 @@ function changeButtonState() {
     validateButton.classList.remove("bgDisable");
     validateButton.classList.add("bgActive");
     console.log(validateButton.classList);
-    // validateButton.disabled = false;
+    validateButton.disabled = false;
     
   } else {
     console.log("azertyuiop");
     validateButton.classList.remove("bgActive");
     validateButton.classList.add("bgDisable");
-    // validateButton.disabled = true;
+    validateButton.disabled = true;
   }
 }
