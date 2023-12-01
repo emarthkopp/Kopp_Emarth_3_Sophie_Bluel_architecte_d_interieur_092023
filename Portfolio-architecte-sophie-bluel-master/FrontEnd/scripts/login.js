@@ -5,19 +5,17 @@ function login() {
     event.preventDefault(); // Pour empêcher le GET du Form HTML
 
     let email = document.getElementById("email").value;
-    console.log(email);
     //regex pour vérifier le format du email saisi
     if (/^[a-zA-Z0-9.-_]+@[a-zA-Z0-9.-_]+.[a-z]{2,10}/.test(email) === false) {
-      document.querySelector("emailErrorMsg").textContent =
-        "Erreur de saisie!";
+      document.getElementById("email").value ="Erreur dans l’identifiant ou le mot de passe!";
     }
 
     let password = document.getElementById("password").value;
     console.log(password);
     //regex pour vérifier le format du mot de passe saisi
     if (/^[a-zA-Zàâäéèêëïîôöùûüç' ,0-9]+$/.test(password) === false) {
-      document.querySelector("passwordErrorMsg").textContent =
-        "Erreur de saisie!";
+      document.querySelector("#passwordErrorMsg").value=
+        "Erreur dans l’identifiant ou le mot de passe";
     }
 
     //variable utilisée dans la fonction connect

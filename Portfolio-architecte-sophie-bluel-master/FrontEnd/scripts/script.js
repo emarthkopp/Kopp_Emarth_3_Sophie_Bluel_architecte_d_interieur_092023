@@ -269,7 +269,11 @@ document.getElementById("validateNewWork").addEventListener("click", (event) => 
     const categoryValue = document.getElementById("categoryAdd").value;
     const selectedFile = document.getElementById("inputAdd").files[0]; // Récupération du fichier sélectionné
 
-    if (selectedFile) {
+    console.log(titleValue )
+    console.log(categoryValue )
+    console.log(selectedFile)
+  
+    if(titleValue && categoryValue !== 0 && selectedFile) {
       const resFormData = new FormData();
 
       resFormData.append("image", selectedFile);
@@ -298,7 +302,7 @@ document.getElementById("validateNewWork").addEventListener("click", (event) => 
           console.error("Erreur lors de la requête :", error);
         });
     } else {
-      console.error("Aucun fichier sélectionné");
+      alert("Vous devez renseigner tous les champs");
     }
   });
 
@@ -313,17 +317,15 @@ function changeButtonState() {
   const validateButton = document.getElementById("validateNewWork");
   console.log(titleValue !== "" && categoryValue !== "0" && imageDisplay !== "none");
   if (titleValue !== "" && categoryValue !== "0" && imageDisplay !== "none") {
-    console.log("azer");
-    console.log(validateButton.classList);
+    
     validateButton.classList.remove("bgDisable");
     validateButton.classList.add("bgActive");
     console.log(validateButton.classList);
-    validateButton.disabled = false;
-    
+    // validateButton.disabled = false;
   } else {
-    console.log("azertyuiop");
     validateButton.classList.remove("bgActive");
     validateButton.classList.add("bgDisable");
-    validateButton.disabled = true;
+    // validateButton.disabled = true;
   }
 }
+
