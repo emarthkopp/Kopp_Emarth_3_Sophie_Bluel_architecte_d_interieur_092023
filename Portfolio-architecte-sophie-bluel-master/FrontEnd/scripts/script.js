@@ -116,8 +116,13 @@ function modalGalery() {
   document.getElementById("btnModalFooter").innerHTML = "Ajouter une photo";
   document.getElementById("btnModalFooter").className = "btn bgActive";
   document.getElementById("btnModalFooter").disabled = false;
+  document.getElementById("btnModalFooter").style.display = "block";
+  document.getElementById("footerLine").style.display = "block";
   document.getElementById("modalContentAdd").style.display = "none";
   document.getElementById("arrow").style.display = "none";
+  document.getElementById("validateNewWork").style.display = "none";
+  document.getElementById("validateLine").style.display = "none";
+
   modalModif.style.display = "block";
   fetch("http://localhost:5678/api/works")
     .then((response) => {
@@ -156,7 +161,8 @@ function modalNewWork() {
   document.getElementById("arrow").style.display = "block";
   document.getElementById("footerLine").style.display = "none";
   document.getElementById("btnModalFooter").style.display = "none";
-console.log(document.getElementById("validateNewWork").className);
+  document.getElementById("validateNewWork").style.display = "block";
+  document.getElementById("validateLine").style.display = "block";
   modalContent.innerHTML = "";
   modalModif.style.display = "block";
 }
@@ -175,7 +181,7 @@ btnModFooter.addEventListener("click", (event) => {
     modalNewWork();
   }
 });
-
+// Ramene a la modale précédente
 btnArrow.onclick = () => {
   modalGalery();
   document.getElementById("footerLine").style.display = "Block";
@@ -269,16 +275,18 @@ document.getElementById("validateNewWork").addEventListener("click", (event) => 
     const categoryValue = document.getElementById("categoryAdd").value;
     const selectedFile = document.getElementById("inputAdd").files[0]; // Récupération du fichier sélectionné
 
-    console.log(titleValue )
-    console.log(categoryValue )
-    console.log(selectedFile)
   
-    if(titleValue && categoryValue !== 0 && selectedFile) {
+    if(titleValue == ""  || categoryValue == 0 || !selectedFile) {
+      alert("Vous devez renseigner tous les champs");
+  
+    } else {
       const resFormData = new FormData();
 
       resFormData.append("image", selectedFile);
       resFormData.append("title", titleValue);
       resFormData.append("category", parseInt(categoryValue));
+     
+    
 
       fetch("http://localhost:5678/api/works", {
         method: "POST",
@@ -301,8 +309,7 @@ document.getElementById("validateNewWork").addEventListener("click", (event) => 
         .catch((error) => {
           console.error("Erreur lors de la requête :", error);
         });
-    } else {
-      alert("Vous devez renseigner tous les champs");
+    
     }
   });
 
@@ -315,17 +322,16 @@ function changeButtonState() {
   const categoryValue = document.getElementById("categoryAdd").value;
   const imageDisplay = window.getComputedStyle(imagePreview).getPropertyValue("display");
   const validateButton = document.getElementById("validateNewWork");
-  console.log(titleValue !== "" && categoryValue !== "0" && imageDisplay !== "none");
   if (titleValue !== "" && categoryValue !== "0" && imageDisplay !== "none") {
     
     validateButton.classList.remove("bgDisable");
     validateButton.classList.add("bgActive");
     console.log(validateButton.classList);
-    // validateButton.disabled = false;
+    //  validateButton.disabled = false;
   } else {
     validateButton.classList.remove("bgActive");
     validateButton.classList.add("bgDisable");
-    // validateButton.disabled = true;
+    //  validateButton.disabled = true;
   }
 }
 

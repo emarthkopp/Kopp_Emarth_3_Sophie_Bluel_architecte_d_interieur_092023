@@ -52,6 +52,7 @@
 		</section>
 		<section id="portfolio">
 			<div id="projects">
+				
 				<h2>Mes Projets</h2>
 				<button class="connected" id="btnProjects"><i class="fa-regular fa-pen-to-square"></i>Modifier</button>
 				<div id="modalModification">
@@ -61,13 +62,10 @@
 							<i class="fa-solid fa-xmark" id="closeModal"></i>
 							<h3 id="modalTitle"></h3>
 						</div>
-						<div class="modalBody" id="modalContent">
-						</div>
+						<div class="modalBody" id="modalContent"></div>
 						<div class="modalBody" id="modalContentAdd">
 							<form method="post" enctype="multipart/form-data" id="formContainer">
 								<div id="addPicture">
-									<div id="errorMessage" style="display: none;">
-									</div>
 									<img id="imagePreview" src="" alt="">
 									<i class="fa-regular fa-image" id="photoChange"></i>
 									<label for="inputAdd" id="btnAdd"> + Ajouter Photo</label>
@@ -78,7 +76,7 @@
 									<label for="titleAdd">Titre</label>
 									<input type="text" name="title" id="titleAdd">
 									<label for="categoryAdd">Catégorie</label>
-									<select  name="category" id="categoryAdd">
+									<select name="category" id="categoryAdd">.
 										<option value="0">Choisissez une catégorie</option>
 										<option value="1">Objets</option>
 										<option value="2">Appartements</option>
@@ -86,25 +84,27 @@
 									</select>
 								</div>
 								<hr class="modalLine" id="validateLine">
-								<div class="inputAdjust"><input type="submit" value="valider" id="validateNewWork" class="btn bgDisable">
+								<div class="inputAdjust">
+									<input type="submit" value="valider" id="validateNewWork" class="btn bgDisable">
 								</div>
 							</form>
 						</div>
-						<hr class="modalLine" id="footerLine">
-						<div class="modalFooter">
-							<button id="btnModalFooter">Ajouter une image</button>
-						</div>
+							<hr class="modalLine" id="footerLine">
+							<div class="modalFooter">
+								<button id="btnModalFooter">Ajouter une image</button>
+							</div>
+
 					</div>
 				</div>
 			</div>
-			<div id="filters" class="disconnected">
-				<button class="btnFilters" type="submit" id="all">Tous</button>
-				<button class="btnFilters" id="objects">Objets</button>
-				<button class="btnFilters" id="flats">Appartements</button>
-				<button class="btnFilters" id="hotels">Hôtels & restaurants</button>
-			</div>
-			<div class="gallery" id="gallery">
-			</div>
+				<div id="filters" class="disconnected">
+					<button class="btnFilters" type="submit" id="all">Tous</button>
+					<button class="btnFilters" id="objects">Objets</button>
+					<button class="btnFilters" id="flats">Appartements</button>
+					<button class="btnFilters" id="hotels">Hôtels & restaurants</button>
+				</div>
+				<div class="gallery" id="gallery"></div>
+			
 		</section>
 		<section id="contact">
 			<h2>Contact</h2>
