@@ -1,5 +1,15 @@
-// Définition de l'élément du dom qui contient l'affichage de la galerie
+// Définition des variables
 const container = document.getElementById("gallery");
+const modalModif = document.getElementById("modalModification");
+const btnOpenModal = document.getElementById("btnProjects");
+const btnCloseModal = document.getElementById("closeModal");
+const modalContent = document.getElementById("modalContent");
+const btnModFooter = document.getElementById("btnModalFooter");
+const btnArrow = document.getElementById("arrow");
+const btnAdd = document.getElementById("btnAdd");
+const imagePreview = document.getElementById("imagePreview");
+const photoChangeIcon = document.getElementById("photoChange");
+const format = document.getElementById("format");
 
 fetch("http://localhost:5678/api/works")
   .then((response) => {
@@ -26,9 +36,19 @@ fetch("http://localhost:5678/api/works")
     console.error("Erreur lors de la requête", error);
   });
 
-// création de la fonction de filtres des travaux
-function filterWorks() {
-  setupFilterButtons();
+// création des fonctions de filtres des travaux
+function filterProjects(categoryId) {
+  const filteredProjects = categoryId
+    ? projects.filter((project) => project.categoryId === categoryId)
+    : projects;
+
+  container.innerHTML = "";
+  filteredProjects.forEach((project) => {
+    container.innerHTML += `<figure>
+      <img src="${project.imageUrl}" alt="${project.title}">
+      <figcaption>${project.title}</figcaption>
+    </figure>`;
+  });
 }
 
 function setupFilterButtons() {
@@ -45,21 +65,7 @@ function setupFilterButtons() {
   });
 }
 
-function filterProjects(categoryId) {
-  const filteredProjects = categoryId
-    ? projects.filter((project) => project.categoryId === categoryId)
-    : projects;
-
-  container.innerHTML = "";
-  filteredProjects.forEach((project) => {
-    container.innerHTML += `<figure>
-      <img src="${project.imageUrl}" alt="${project.title}">
-      <figcaption>${project.title}</figcaption>
-    </figure>`;
-  });
-}
-
-filterWorks();
+setupFilterButtons();
 
 //vérifie si le token est valide et affiche ou non les éléments dépendant de la validité
 if (localStorage.getItem("token")) {
@@ -103,14 +109,6 @@ addEventListener("hashchange", (event) => {
   }
 });
 
-//création des variables nécessaires à la création de la modale de modification et lien avec les balises HTML
-const modalModif = document.getElementById("modalModification");
-const btnOpenModal = document.getElementById("btnProjects");
-const btnCloseModal = document.getElementById("closeModal");
-const modalContent = document.getElementById("modalContent");
-const btnModFooter = document.getElementById("btnModalFooter");
-const btnArrow = document.getElementById("arrow");
-const btnAdd = document.getElementById("btnAdd");
 //masque la modale par défaut
 modalModif.style.display = "none";
 //au clic ligne 157 ouvre la modale et lance l'appel
@@ -156,12 +154,9 @@ function modalGalery() {
 btnOpenModal.onclick = () => {
   modalGalery();
 };
-const imagePreview = document.getElementById("imagePreview");
-const photoChangeIcon = document.getElementById("photoChange");
-const format = document.getElementById("format");
 
 function modalNewWork() {
-  //création des éléments nécessaires à la craétion de la modale d'ajout
+  //modification des éléments nécessaires à la craétion de la modale d'ajout
   document.getElementById("modalTitle").innerHTML = "Ajout photo";
   document.getElementById("modalContentAdd").style.display = "block";
   document.getElementById("arrow").style.display = "block";
@@ -175,14 +170,12 @@ function modalNewWork() {
 }
 function resetForm() {
   const form = document.getElementById("formContainer");
-  console.log(document.getElementById("inputAdd").files);
   form.reset();
   imagePreview.src = "";
   imagePreview.style.display = "none";
   photoChangeIcon.style.display = "block";
   btnAdd.style.display = "inline-block";
   format.style.display = "block";
-  console.log(document.getElementById("inputAdd").files);
 }
 
 // au clic sur le bouton passe au deuxième état de la modale
@@ -211,10 +204,6 @@ window.onclick = function (event) {
 };
 
 function trash(trashId) {
-  // ouverture d'une fenêtre de validation pour confirmer la suppression
-  const confirmation = confirm(`Voulez-vous supprimer cet élément ?`);
-  // Si l'utilisateur annule, ne pas supprimer
-  if (!confirmation) return;
 
   fetch("http://localhost:5678/api/works/" + trashId, {
     method: "DELETE",
@@ -241,16 +230,19 @@ function trash(trashId) {
     .catch((error) => {
       console.error(error);
     });
+     // ouverture d'une fenêtre de validation pour confirmer la suppression
+  const confirmation = confirm(`Voulez-vous supprimer cet élément ?`);
+  // Si l'utilisateur annule, ne pas supprimer
+  if (!confirmation) return;
 }
 
 // initialisation de la variable à null
 let selectedFile = null;
 btnAdd.onclick = (event) => {
-  // empêche le comportement par défut
   event.preventDefault();
 
   const fileInput = document.getElementById("inputAdd");
-  //  représente le premier fichier sélectionné.
+  //  représente le fichier sélectionné.
   selectedFile = fileInput.files[0];
   // Cliquez sur l'élément input créé pour ouvrir la fenêtre de sélection de fichier
   if (!selectedFile) {
@@ -259,20 +251,13 @@ btnAdd.onclick = (event) => {
 };
 // Écoute l'événement de fermeture ou de rechargement de la page
 window.addEventListener("beforeunload", () => {
-  const imagePreview = document.getElementById("imagePreview");
-  const photoChangeIcon = document.getElementById("photoChangeIcon");
-  const btnAdd = document.getElementById("btnAdd");
-  const format = document.getElementById("format");
-
   // Réinitialise l'affichage des éléments au chargement de la page
   imagePreview.style.display = "none";
   photoChangeIcon.style.display = "block";
   btnAdd.style.display = "block";
   format.style.display = "block";
 });
-document
-  .getElementById("validateNewWork")
-  .addEventListener("click", (event) => {
+document.getElementById("validateNewWork").addEventListener("click", (event) => {
     event.preventDefault();
 
     const titleValue = document.getElementById("titleAdd").value;
@@ -282,7 +267,6 @@ document
 
     if (titleValue == "" || categoryValue == 0 || !selectedPicture) {
       alert("Vous devez renseigner tous les champs");
-      console.log(titleValue, categoryValue, selectedPicture, "toto");
     } else {
       const resFormData = new FormData();
 
@@ -347,9 +331,7 @@ document.getElementById("inputAdd").addEventListener("change", () => {
 function changeButtonState() {
   const titleValue = document.getElementById("titleAdd").value;
   const categoryValue = document.getElementById("categoryAdd").value;
-  const imageDisplay = window
-    .getComputedStyle(imagePreview)
-    .getPropertyValue("display");
+  const imageDisplay = window.getComputedStyle(imagePreview).getPropertyValue("display");
   const validateButton = document.getElementById("validateNewWork");
   if (titleValue !== "" && categoryValue !== "0" && imageDisplay !== "none") {
     validateButton.classList.remove("bgDisable");

@@ -11,7 +11,6 @@ function login() {
     }
 
     let password = document.getElementById("password").value;
-    console.log(password);
     //regex pour vérifier le format du mot de passe saisi
     if (/^[a-zA-Zàâäéèêëïîôöùûüç' ,0-9]+$/.test(password) === false) {
       document.querySelector("#passwordErrorMsg").value=
