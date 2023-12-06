@@ -10,32 +10,9 @@ const btnAdd = document.getElementById("btnAdd");
 const imagePreview = document.getElementById("imagePreview");
 const photoChangeIcon = document.getElementById("photoChange");
 const format = document.getElementById("format");
-
-fetch("http://localhost:5678/api/works")
-  .then((response) => {
-    // Gérer la réponse HTTP (conversion en JSON, gestion des erreurs)
-
-    if (!response.ok) {
-      throw new Error("Erreur : " + response.status);
-    }
-    return response.json();
-  })
-  .then((data) => {
-    projects = data;
-    // Traiter les données reçues
-    for (works in data) {
-      // Création d'une balise html dans le DOM
-      container.innerHTML += `<figure>
-      <img src=${data[works].imageUrl} alt=${data[works].title}>
-      <figcaption>${data[works].title}</figcaption>
-    </figure>`;
-    }
-  })
-  .catch((error) => {
-    // Gérer les erreurs
-    console.error("Erreur lors de la requête", error);
-  });
-
+let selectedFile = null;
+//masque la modale par défaut
+modalModif.style.display = "none";
 // création des fonctions de filtres des travaux
 function filterProjects(categoryId) {
   const filteredProjects = categoryId
@@ -65,33 +42,6 @@ function setupFilterButtons() {
   });
 }
 
-setupFilterButtons();
-
-//vérifie si le token est valide et affiche ou non les éléments dépendant de la validité
-if (localStorage.getItem("token")) {
-  let elementsConnected = document.querySelectorAll(".connected");
-
-  for (var i = 0; i < elementsConnected.length; i++) {
-    elementsConnected[i].style.display = "block";
-  }
-  let elementsDisconnected = document.querySelectorAll(".disconnected");
-
-  for (var i = 0; i < elementsDisconnected.length; i++) {
-    elementsDisconnected[i].style.display = "none";
-  }
-} else {
-  let elementsConnected = document.querySelectorAll(".connected");
-
-  for (var i = 0; i < elementsConnected.length; i++) {
-    elementsConnected[i].style.display = "none";
-  }
-  let elementsDisconnected = document.querySelectorAll(".disconnected");
-
-  for (var i = 0; i < elementsDisconnected.length; i++) {
-    elementsDisconnected[i].style.display = "block";
-  }
-}
-
 function logout() {
   // Supprime l'ID et le token du localStorage
   localStorage.removeItem("userId");
@@ -100,18 +50,7 @@ function logout() {
   window.location.href = "index.html";
 }
 
-// met un event listener dans l'url sur la redirection de window
-addEventListener("hashchange", (event) => {
-  event.preventDefault();
-  const dest = event.target?.document?.location?.hash;
-  if (dest === "#logout") {
-    logout();
-  }
-});
-
-//masque la modale par défaut
-modalModif.style.display = "none";
-//au clic ligne 157 ouvre la modale et lance l'appel
+//gère le premier état de la modale et lance l'appel
 function modalGalery() {
   document.getElementById("modalTitle").innerHTML = "Galerie photo";
   document.getElementById("btnModalFooter").innerHTML = "Ajouter une photo";
@@ -123,7 +62,6 @@ function modalGalery() {
   document.getElementById("arrow").style.display = "none";
   document.getElementById("validateNewWork").style.display = "none";
   document.getElementById("validateLine").style.display = "none";
-
   modalModif.style.display = "block";
   //  lancement de l'appel à l'API et traitement de la réponse et son affichage dans la galerie
   fetch("http://localhost:5678/api/works")
@@ -150,11 +88,6 @@ function modalGalery() {
     });
 }
 
-//  au clic sur le bouton appel de la fonction définie ci dessus
-btnOpenModal.onclick = () => {
-  modalGalery();
-};
-
 function modalNewWork() {
   //modification des éléments nécessaires à la craétion de la modale d'ajout
   document.getElementById("modalTitle").innerHTML = "Ajout photo";
@@ -164,7 +97,6 @@ function modalNewWork() {
   document.getElementById("btnModalFooter").style.display = "none";
   document.getElementById("validateNewWork").style.display = "block";
   document.getElementById("validateLine").style.display = "block";
-
   modalContent.innerHTML = "";
   modalModif.style.display = "block";
 }
@@ -177,6 +109,23 @@ function resetForm() {
   btnAdd.style.display = "inline-block";
   format.style.display = "block";
 }
+function changeButtonState() {
+  const titleValue = document.getElementById("titleAdd").value;
+  const categoryValue = document.getElementById("categoryAdd").value;
+  const imageDisplay = window.getComputedStyle(imagePreview).getPropertyValue("display");
+  const validateButton = document.getElementById("validateNewWork");
+  if (titleValue !== "" && categoryValue !== "0" && imageDisplay !== "none") {
+    validateButton.classList.remove("bgDisable");
+    validateButton.classList.add("bgActive");
+  } else {
+    validateButton.classList.remove("bgActive");
+    validateButton.classList.add("bgDisable");
+  }
+}
+//  au clic sur le bouton appel de la fonction définie ci dessus
+btnOpenModal.onclick = () => {
+  modalGalery();
+};
 
 // au clic sur le bouton passe au deuxième état de la modale
 btnModFooter.addEventListener("click", () => {
@@ -236,11 +185,8 @@ function trash(trashId) {
   if (!confirmation) return;
 }
 
-// initialisation de la variable à null
-let selectedFile = null;
 btnAdd.onclick = (event) => {
   event.preventDefault();
-
   const fileInput = document.getElementById("inputAdd");
   //  représente le fichier sélectionné.
   selectedFile = fileInput.files[0];
@@ -327,17 +273,63 @@ document.getElementById("inputAdd").addEventListener("change", () => {
     reader.readAsDataURL(selectedFile);
   }
 });
+//vérifie si le token est valide et affiche ou non les éléments dépendant de la validité
+if (localStorage.getItem("token")) {
+  let elementsConnected = document.querySelectorAll(".connected");
 
-function changeButtonState() {
-  const titleValue = document.getElementById("titleAdd").value;
-  const categoryValue = document.getElementById("categoryAdd").value;
-  const imageDisplay = window.getComputedStyle(imagePreview).getPropertyValue("display");
-  const validateButton = document.getElementById("validateNewWork");
-  if (titleValue !== "" && categoryValue !== "0" && imageDisplay !== "none") {
-    validateButton.classList.remove("bgDisable");
-    validateButton.classList.add("bgActive");
-  } else {
-    validateButton.classList.remove("bgActive");
-    validateButton.classList.add("bgDisable");
+  for (var i = 0; i < elementsConnected.length; i++) {
+    elementsConnected[i].style.display = "block";
+  }
+  let elementsDisconnected = document.querySelectorAll(".disconnected");
+
+  for (var i = 0; i < elementsDisconnected.length; i++) {
+    elementsDisconnected[i].style.display = "none";
+  }
+} else {
+  let elementsConnected = document.querySelectorAll(".connected");
+
+  for (var i = 0; i < elementsConnected.length; i++) {
+    elementsConnected[i].style.display = "none";
+  }
+  let elementsDisconnected = document.querySelectorAll(".disconnected");
+
+  for (var i = 0; i < elementsDisconnected.length; i++) {
+    elementsDisconnected[i].style.display = "block";
   }
 }
+
+fetch("http://localhost:5678/api/works")
+  .then((response) => {
+    // Gérer la réponse HTTP (conversion en JSON, gestion des erreurs)
+
+    if (!response.ok) {
+      throw new Error("Erreur : " + response.status);
+    }
+    return response.json();
+  })
+  .then((data) => {
+    projects = data;
+    // Traiter les données reçues
+    for (works in data) {
+      // Création d'une balise html dans le DOM
+      container.innerHTML += `<figure>
+      <img src=${data[works].imageUrl} alt=${data[works].title}>
+      <figcaption>${data[works].title}</figcaption>
+    </figure>`;
+    }
+  })
+  .catch((error) => {
+    // Gérer les erreurs
+    console.error("Erreur lors de la requête", error);
+  });
+
+// met un event listener dans l'url sur la redirection de window
+addEventListener("hashchange", (event) => {
+  event.preventDefault();
+  const dest = event.target?.document?.location?.hash;
+  if (dest === "#logout") {
+    logout();
+  }
+});
+
+  setupFilterButtons();
