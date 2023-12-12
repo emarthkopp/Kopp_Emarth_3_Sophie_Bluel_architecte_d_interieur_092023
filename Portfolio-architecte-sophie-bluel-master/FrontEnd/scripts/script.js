@@ -33,15 +33,15 @@ function filterProjects(categoryId) {
 // Création des boutons de filtre et utilisation de filterProjects
 function setupFilterButtons() {
   const filterButtons = [
-    { id: "objects", filter: 1 },
-    { id: "flats", filter: 2 },
-    { id: "hotels", filter: 3 },
-    { id: "all", filter: null },
+    { name: "objects", id: 1 },
+    { name: "flats", id: 2 },
+    { name: "hotels", id: 3 },
+    { name: "all", id: null },
   ];
 
   filterButtons.forEach((button) => {
-    const filterButton = document.getElementById(button.id);
-    filterButton.addEventListener("click", () => filterProjects(button.filter));
+    const filterButton = document.getElementById(button.name);
+    filterButton.addEventListener("click", () => filterProjects(button.id));
   });
 }
 
@@ -188,7 +188,7 @@ btnCloseModal.onclick = function () {
 
 //ferme la modale au clic en dehors
 window.onclick = function (event) {
-  if (event.target == modalModif) {
+  if (event.target === modalModif) {
     modalModif.style.display = "none";
   }
 };
@@ -255,7 +255,7 @@ document.getElementById("validateNewWork").addEventListener("click", (event) => 
     // Récupération du fichier sélectionné
     const selectedPicture = document.getElementById("inputAdd").files[0];
 
-    if (titleValue == "" || categoryValue == 0 || !selectedPicture) {
+    if (titleValue === "" || categoryValue === 0 || !selectedPicture) {
       alert("Vous devez renseigner tous les champs");
     } else {
       // utilisation de l'objet FormData pour convertir les clefs/valeurs du body au format attendu par l'API
