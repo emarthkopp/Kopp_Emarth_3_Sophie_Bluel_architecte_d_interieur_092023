@@ -1,3 +1,4 @@
+
 // Définition des variables
 const container = document.getElementById("gallery");
 const modalModif = document.getElementById("modalModification");
@@ -33,15 +34,15 @@ function filterProjects(categoryId) {
 // Création des boutons de filtre et utilisation de filterProjects
 function setupFilterButtons() {
   const filterButtons = [
-    { name: "objects", id: 1 },
-    { name: "flats", id: 2 },
-    { name: "hotels", id: 3 },
-    { name: "all", id: null },
+    { id: "objects", filter: 1 },
+    { id: "flats", filter: 2 },
+    { id: "hotels", filter: 3 },
+    { id: "all", filter: null },
   ];
 
   filterButtons.forEach((button) => {
-    const filterButton = document.getElementById(button.name);
-    filterButton.addEventListener("click", () => filterProjects(button.id));
+    const filterButton = document.getElementById(button.id);
+    filterButton.addEventListener("click", () => filterProjects(button.filter));
   });
 }
 
@@ -188,13 +189,19 @@ btnCloseModal.onclick = function () {
 
 //ferme la modale au clic en dehors
 window.onclick = function (event) {
-  if (event.target === modalModif) {
+  if (event.target == modalModif) {
     modalModif.style.display = "none";
   }
 };
 
 // Gestion de la suppression des projets 
 function trash(trashId) {
+  
+// ouverture d'une fenêtre de validation pour confirmer la suppression
+const confirmation = confirm(`Voulez-vous supprimer cet élément ?`);
+// Si l'utilisateur annule, ne pas supprimer
+if (!confirmation) return;
+
   fetch("http://localhost:5678/api/works/" + trashId, {
     method: "DELETE",
     headers: {
@@ -220,10 +227,6 @@ function trash(trashId) {
     .catch((error) => {
       console.error(error);
     });
-     // ouverture d'une fenêtre de validation pour confirmer la suppression
-  const confirmation = confirm(`Voulez-vous supprimer cet élément ?`);
-  // Si l'utilisateur annule, ne pas supprimer
-  if (!confirmation) return;
 }
 
 // au clic récupération du fichier dans l'input type file
@@ -255,7 +258,7 @@ document.getElementById("validateNewWork").addEventListener("click", (event) => 
     // Récupération du fichier sélectionné
     const selectedPicture = document.getElementById("inputAdd").files[0];
 
-    if (titleValue === "" || categoryValue === 0 || !selectedPicture) {
+    if (titleValue == "" || categoryValue == 0 || !selectedPicture) {
       alert("Vous devez renseigner tous les champs");
     } else {
       // utilisation de l'objet FormData pour convertir les clefs/valeurs du body au format attendu par l'API

@@ -1,3 +1,5 @@
+// 
+
 function login() {
   // Recupere la balise HTML
   const loginForm = document.getElementById("loginForm");
@@ -7,11 +9,13 @@ function login() {
     let email = document.getElementById("email").value;
     //regex pour vérifier le format du email saisi
     if (/^[a-zA-Z0-9.-_]+@[a-zA-Z0-9.-_]+.[a-z]{2,10}/.test(email) === false) {
+      document.getElementById("email").value ;
     }
 
     let password = document.getElementById("password").value;
     //regex pour vérifier le format du mot de passe saisi
-    if (/^[a-zA-Zàâäéèêëïîôöùûüç' ,0-9]+$/.test(password) || password ===  "") {
+    if (/^[a-zA-Zàâäéèêëïîôöùûüç' ,0-9]+$/.test(password) === false && document.getElementById("password") === "") {
+      document.getElementById("password").value ;
     }
 
     //variable utilisée dans la fonction connect
